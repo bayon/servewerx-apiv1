@@ -50,6 +50,12 @@ mongoose
 app.get("/", (req, res) => {
   res.send("welcome to the auth system.");
 });
+app.get("/jack", (req, res) => {
+  res.send("welcome to the jack system.");
+});
+app.get("/jacky", (req, res) => {
+  res.send("welcome to the jacky system.");
+});
 
 app.post("/api/test", async (req, res) => {
   console.log("req.body:", req.body);
