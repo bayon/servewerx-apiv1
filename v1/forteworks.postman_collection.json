@@ -1,0 +1,105 @@
+{
+	"info": {
+		"_postman_id": "3905a3f5-4c60-4e26-bc1e-20fa772d52f5",
+		"name": "forteworks",
+		"description": "Test the api for forteworks",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Initial Call To Website",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://www.forteworks.com",
+					"protocol": "http",
+					"host": [
+						"www",
+						"forteworks",
+						"com"
+					]
+				},
+				"description": "should get 200 OK "
+			},
+			"response": []
+		},
+		{
+			"name": "Login Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    // var jsonData = JSON.parse(pm.response);",
+							" //console.log(\"jsonData:\",jsonData)",
+							"//postman.setEnvironmentVariable(\"token\", jsonData.token);",
+							"});",
+							"",
+							"pm.test('name',function (){",
+							"    console.log('test here.')",
+							"    console.log('pm.response:',pm.response)",
+							"    var res = JSON.parse(responseBody);",
+							"    console.log('res:',res);",
+							"    postman.setEnvironmentVariable(\"forteworksToken\", res.token);",
+							"    var myToken = pm.variables.get(\"forteworksToken\");",
+							"    console.log('myToken:',myToken)",
+							"",
+							"})",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\":\"z@z.com\",\n    \"password\":\"zzzzzz\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/api/users/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "API_URL",
+			"value": "http://localhost:4000/api"
+		}
+	]
+}

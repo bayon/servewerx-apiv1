@@ -1,0 +1,81 @@
+  /*
+ $and:[
+            {$or: [
+                { fullName: `${key}` },
+
+              ]
+            }, {$or: [
+                { email: `${key}` },
+
+              ]
+            }
+        ]
+  */
+  
+
+  THANKS TO Ivan Breet
+https://xuguoming.wordpress.com/2015/02/11/using-variable-regex-with-mongodb-query-in-node-js/
+  db.users.find(name: new RegExp(search)) //For substring search, case sensitive. 
+db.users.find(name: new RegExp('^' + search + '$')) //For exact search, case sensitive
+db.users.find(name: new RegExp(search， ‘i')) //For substring search, case insensitive
+db.users.find(name: new RegExp('^' +search + '$', 'i')); //For exact search, case insensitive
+
+
+
+// MONGODB CONDITIONS: 
+OR
+db.inventory.find( { $or: [ { quantity: { $lt: 20 } }, { price: 10 } ] } )
+AND 
+db.inventory.find( { $and: [ { price: { $ne: 1.99 } }, { price: { $exists: true } } ] } )
+
+
+
+AND OR ? 
+
+-- In RDBMS
+select * from employees where status= 'A' and age > 30
+
+-- In MongoDB
+db.employees.find(  { status: "A",age:{>:30} })
+
+db.employees.find(  { status: "A",age:{>:30} },{_id:0} )
+{ "name" : "abc123", "age" : 55, "status" : "A" }
+{ "name" : "asd", "age" : 35, "status" : "A" }
+
+
+OR Operator
+Example show the use of OR operator in both MongoDB and RDBMS environment.
+
+-- In RDBMS
+select * FROM employees WHERE status = 'A' OR age = 50
+
+--In MongoDB
+db.employees.find(  { $or: [ { status: "A" } , { age: 50 } ] } )
+
+db.employees.find(  { $or: [ { status: "A" } , { age: 50 } ] },{_id:0} )
+{ "name" : "abc123", "age" : 55, "status" : "A" }
+{ "name" : "qwe", "age" : 20, "status" : "A" }
+{ "name" : "zxc", "age" : 25, "status" : "A" }
+{ "name" : "asd", "age" : 35, "status" : "A" }
+
+FILTER OWNERS CASE: 
+router.post("/filterOwners", async (req, res) => {
+  console.log("API filterOwners: req.body:",req.body)
+  const key = req.body.key;
+  const userId = req.body.userId;
+  console.log('key and userId:',key,userId)
+  const post = await Post.find(
+    { title: new RegExp(key, 'i'), userId: userId }
+ );
+ console.log('filter .....posts:',post);
+ res.send(post)
+}); 
+
+
+
+DELETING: 
+scenario: find item that meets criteria and then delete it. 
+take only one item from the matching filters
+var item = db.collection.findOne({'condition':'some condition'})
+and delete the item by using the id
+db.collection.remove({_id: item._id});
