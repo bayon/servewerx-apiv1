@@ -10,3 +10,10 @@ https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-applica
 
 https://www.youtube.com/watch?v=-IBZGS_UXhU
 using upstream api gateway technique.
+
+
+https://servewerx.com/api/jacky/
+http://www.servewerx.com/
+https://www.servewerx.com/
+digital ocean things going awry...not mine....may need to set A record for www 
+
