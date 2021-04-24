@@ -61,6 +61,12 @@ app.get("/jacky", (req, res) => {
 
   //res.send("welcome to the jacky system.");
 });
+app.post("/jacky", (req, res) => {
+  console.log("req.body:", req.body);
+  res.send({"success":true,"data": req.body});
+
+  //res.send("welcome to the jacky system.");
+});
 
 app.post("/api/test", async (req, res) => {
   console.log("req.body:", req.body);
