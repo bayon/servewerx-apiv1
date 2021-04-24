@@ -88,7 +88,7 @@ app.post("/api/test", async (req, res) => {
 // });
 
 // var upload = multer({ storage: storage }).array("file");
-app.post("/api/uploadUserImage", function (req, res) {
+app.post("/uploadUserImage", function (req, res) {
   // USER IMAGE UPLOADING ---------------------------------------
   var multer = require("multer");
   var storage = multer.diskStorage({
@@ -118,7 +118,7 @@ app.post("/api/uploadUserImage", function (req, res) {
   });
 });
 
-app.post("/api/uploadPostImage", function (req, res) {
+app.post("/uploadPostImage", function (req, res) {
   // USER IMAGE UPLOADING ---------------------------------------
   var multer = require("multer");
   var storage = multer.diskStorage({
@@ -154,7 +154,7 @@ app.post("/api/uploadPostImage", function (req, res) {
 // Stripe Functions:
 // stripe payments    https://www.youtube.com/watch?v=JkSgXgqRH6k
 
-app.post("/api/pay", async (req, res) => {
+app.post("/pay", async (req, res) => {
   const { email } = req.body;
 
   const paymentIntent = await stripe.paymentIntents.create({
@@ -168,7 +168,7 @@ app.post("/api/pay", async (req, res) => {
   res.json({ client_secret: paymentIntent["client_secret"] });
 });
 
-app.post("/api/sub", async (req, res) => {
+app.post("/sub", async (req, res) => {
   const { email, payment_method } = req.body;
 
   const customer = await stripe.customers.create({
