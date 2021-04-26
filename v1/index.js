@@ -9,6 +9,7 @@ const verifyToken = require("./routes/verifyToken");
 
 //for digital ocean spaces access:
 const aws = require("aws-sdk");
+const multer = require("multer");
 const multerS3 = require("multer-s3");
 
 app.use(express.static("./public"));
@@ -36,10 +37,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 //ROUTES:
-app.use("/users/", authRoutes);
-app.use("/posts/", postRoutes);
-// app.use("/api/users/", authRoutes);
-// app.use("/api/posts/", postRoutes);
+// app.use("/users/", authRoutes);
+// app.use("/posts/", postRoutes);
+app.use("/api/users/", authRoutes);
+app.use("/api/posts/", postRoutes);
 mongoose
   .connect(
     `mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASS}@cluster0.mputo.mongodb.net/${process.env.MONGO_DB_NAME}?retryWrites=true&w=majority`,
@@ -186,7 +187,7 @@ app.post("/sub", async (req, res) => {
 TO GO: 
 const aws = require('aws-sdk');
 const multerS3 = require('multer-s3');
-*/
+
 const spacesEndpoint = new aws.Endpoint("nyc3.digitaloceanspaces.com");
 const s3 = new aws.S3({
   endpoint: spacesEndpoint,
@@ -203,12 +204,20 @@ const upload = multer({
     },
   }),
 }).array("upload", 1);
+*/
 
-app.post("/uploadUserImage", function (req, res) {
+app.post("/api/uploadUserImage", function (req, res) {
+  console.log("api image upload: spot 1");
+  console.log("req.body:", req.body);
+
+  const aws = require("aws-sdk");
+  const multer = require("multer");
+  const multerS3 = require("multer-s3");
   const spacesEndpoint = new aws.Endpoint("nyc3.digitaloceanspaces.com");
   const s3 = new aws.S3({
     endpoint: spacesEndpoint,
   });
+  console.log("api image upload: spot 2");
   // Change bucket property to your Space name
   const upload = multer({
     storage: multerS3({
@@ -220,21 +229,24 @@ app.post("/uploadUserImage", function (req, res) {
         cb(null, file.originalname);
       },
     }),
-  }).array("upload", 1);
+  }).array("file", 1); // "upload" from space example....name of html input element
+
+  console.log("api image upload: spot 3");
 
   upload(req, res, function (err) {
+    console.log("api image upload: spot 4");
+
     if (err) {
       console.log(err);
       //return response.redirect("/error");
       return res.status(500).json(err);
     }
-    console.log('File uploaded successfully.');
+    console.log("File uploaded successfully.");
     //response.redirect("/success");
     return res.status(200).send("currentImageName");
-
   });
 
-/*
+  /*
 REFERENCE DIGITAL OCEAN SPACES: 
  https://www.digitalocean.com/community/tutorials/how-to-upload-a-file-to-object-storage-with-node-js 
 
@@ -243,7 +255,6 @@ REFERENCE DIGITAL OCEAN SPACES:
 
  https://servewerx-space-1.nyc3.digitaloceanspaces.com
 */
-
 
   // // USER IMAGE UPLOADING ---------------------------------------
   // var multer = require("multer");
