@@ -7,6 +7,10 @@ const authRoutes = require("./routes/auth");
 const postRoutes = require("./routes/post");
 const verifyToken = require("./routes/verifyToken");
 
+//for digital ocean spaces access:
+const aws = require("aws-sdk");
+const multerS3 = require("multer-s3");
+
 app.use(express.static("./public"));
 app.use("/public/images", express.static(__dirname + "/public/images/"));
 
@@ -54,17 +58,17 @@ app.get("/", (req, res) => {
 app.get("/jack", (req, res) => {
   console.log("req.body:", req.body);
 
-  res.send({"success":true,"data": req.body});
+  res.send({ success: true, data: req.body });
 });
 app.get("/jacky", (req, res) => {
   console.log("req.body:", req.body);
-  res.send({"success":true,"data": req.body});
+  res.send({ success: true, data: req.body });
 
   //res.send("welcome to the jacky system.");
 });
 app.post("/jacky", (req, res) => {
   console.log("req.body:", req.body);
-  res.send({"success":true,"data": req.body});
+  res.send({ success: true, data: req.body });
 
   //res.send("welcome to the jacky system.");
 });
@@ -74,21 +78,7 @@ app.post("/api/test", async (req, res) => {
   res.send(200);
 });
 
-// // IMAGE UPLOADING ---------------------------------------
-// var multer = require("multer");
-// var storage = multer.diskStorage({
-//   destination: "./public/images",
-//   filename: function (req, file, cb) {
-//     console.log('req.body 3:',req.body)
-
-//     const _id = req.body._id;
-//      currentImageName = _id+ "-" + file.originalname;
-//     cb(null, _id + "-" + file.originalname);
-//   },
-// });
-
-// var upload = multer({ storage: storage }).array("file");
-app.post("/uploadUserImage", function (req, res) {
+app.post("/ONHOLD/uploadUserImage", function (req, res) {
   // USER IMAGE UPLOADING ---------------------------------------
   var multer = require("multer");
   var storage = multer.diskStorage({
@@ -127,7 +117,7 @@ app.post("/uploadPostImage", function (req, res) {
       console.log("req.body 3:", req.body);
 
       const postId = req.body.id; // was postId: should solve the undefined value in image file name....
-      console.log("POST ID: sent to server: ",postId)
+      console.log("POST ID: sent to server: ", postId);
       currentPostImageName = postId + "-" + file.originalname;
       cb(null, postId + "-" + file.originalname);
     },
@@ -190,4 +180,96 @@ app.post("/sub", async (req, res) => {
     subscription["latest_invoice"]["payment_intent"]["client_secret"];
 
   res.json({ client_secret: client_secret, status: status });
+});
+
+/*
+TO GO: 
+const aws = require('aws-sdk');
+const multerS3 = require('multer-s3');
+*/
+const spacesEndpoint = new aws.Endpoint("nyc3.digitaloceanspaces.com");
+const s3 = new aws.S3({
+  endpoint: spacesEndpoint,
+});
+// Change bucket property to your Space name
+const upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: "servewerx-space-1",
+    acl: "public-read",
+    key: function (request, file, cb) {
+      console.log(file);
+      cb(null, file.originalname);
+    },
+  }),
+}).array("upload", 1);
+
+app.post("/uploadUserImage", function (req, res) {
+  const spacesEndpoint = new aws.Endpoint("nyc3.digitaloceanspaces.com");
+  const s3 = new aws.S3({
+    endpoint: spacesEndpoint,
+  });
+  // Change bucket property to your Space name
+  const upload = multer({
+    storage: multerS3({
+      s3: s3,
+      bucket: "servewerx-space-1",
+      acl: "public-read",
+      key: function (request, file, cb) {
+        console.log(file);
+        cb(null, file.originalname);
+      },
+    }),
+  }).array("upload", 1);
+
+  upload(req, res, function (err) {
+    if (err) {
+      console.log(err);
+      //return response.redirect("/error");
+      return res.status(500).json(err);
+    }
+    console.log('File uploaded successfully.');
+    //response.redirect("/success");
+    return res.status(200).send("currentImageName");
+
+  });
+
+/*
+REFERENCE DIGITAL OCEAN SPACES: 
+ https://www.digitalocean.com/community/tutorials/how-to-upload-a-file-to-object-storage-with-node-js 
+
+ CREATE A SPACE: 
+ https://www.digitalocean.com/community/tutorials/how-to-create-a-digitalocean-space-and-api-key
+
+ https://servewerx-space-1.nyc3.digitaloceanspaces.com
+*/
+
+
+  // // USER IMAGE UPLOADING ---------------------------------------
+  // var multer = require("multer");
+  // var storage = multer.diskStorage({
+  //   destination: "./public/images",
+  //   filename: function (req, file, cb) {
+  //     console.log("req.body 3:", req.body);
+
+  //     const _id = req.body._id;
+  //     currentImageName = _id + "-" + file.originalname;
+  //     cb(null, _id + "-" + file.originalname);
+  //   },
+  // });
+  // var upload = multer({ storage: storage }).array("file");
+
+  // console.log("1-req.body:", req.body);
+  // upload(req, res, function (err) {
+  //   console.log("currentImageName:", currentImageName);
+  //   console.log("req.body 2:", req.body);
+
+  //   if (err instanceof multer.MulterError) {
+  //     return res.status(500).json(err);
+  //   } else if (err) {
+  //     return res.status(500).json(err);
+  //   }
+
+  //   return res.status(200).send(currentImageName);
+  // });
 });
