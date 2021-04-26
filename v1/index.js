@@ -36,6 +36,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // parse application/json
 app.use(bodyParser.json());
 
+
+// NOTE: every endpoint in this index.js file has a 'prefix' of 'api' already set.
 //ROUTES:
 app.use("/users/", authRoutes);
 app.use("/posts/", postRoutes);
@@ -74,71 +76,72 @@ app.post("/jacky", (req, res) => {
   //res.send("welcome to the jacky system.");
 });
 
-app.post("/api/test", async (req, res) => {
+app.post("/test", async (req, res) => {
   console.log("req.body:", req.body);
   res.send(200);
 });
 
-app.post("/ONHOLD/uploadUserImage", function (req, res) {
-  // USER IMAGE UPLOADING ---------------------------------------
-  var multer = require("multer");
-  var storage = multer.diskStorage({
-    destination: "./public/images",
-    filename: function (req, file, cb) {
-      console.log("req.body 3:", req.body);
+// app.post("/ONHOLD/uploadUserImage", function (req, res) {
+//   // USER IMAGE UPLOADING ---------------------------------------
+//   var multer = require("multer");
+//   var storage = multer.diskStorage({
+//     destination: "./public/images",
+//     filename: function (req, file, cb) {
+//       console.log("req.body 3:", req.body);
 
-      const _id = req.body._id;
-      currentImageName = _id + "-" + file.originalname;
-      cb(null, _id + "-" + file.originalname);
-    },
-  });
-  var upload = multer({ storage: storage }).array("file");
+//       const _id = req.body._id;
+//       currentImageName = _id + "-" + file.originalname;
+//       cb(null, _id + "-" + file.originalname);
+//     },
+//   });
+//   var upload = multer({ storage: storage }).array("file");
 
-  console.log("1-req.body:", req.body);
-  upload(req, res, function (err) {
-    console.log("currentImageName:", currentImageName);
-    console.log("req.body 2:", req.body);
+//   console.log("1-req.body:", req.body);
+//   upload(req, res, function (err) {
+//     console.log("currentImageName:", currentImageName);
+//     console.log("req.body 2:", req.body);
 
-    if (err instanceof multer.MulterError) {
-      return res.status(500).json(err);
-    } else if (err) {
-      return res.status(500).json(err);
-    }
+//     if (err instanceof multer.MulterError) {
+//       return res.status(500).json(err);
+//     } else if (err) {
+//       return res.status(500).json(err);
+//     }
 
-    return res.status(200).send(currentImageName);
-  });
-});
+//     return res.status(200).send(currentImageName);
+//   });
+// });
 
-app.post("/uploadPostImage", function (req, res) {
-  // USER IMAGE UPLOADING ---------------------------------------
-  var multer = require("multer");
-  var storage = multer.diskStorage({
-    destination: "./public/images/posts",
-    filename: function (req, file, cb) {
-      console.log("req.body 3:", req.body);
 
-      const postId = req.body.id; // was postId: should solve the undefined value in image file name....
-      console.log("POST ID: sent to server: ", postId);
-      currentPostImageName = postId + "-" + file.originalname;
-      cb(null, postId + "-" + file.originalname);
-    },
-  });
-  var upload = multer({ storage: storage }).array("file");
+// app.post("/uploadPostImage/DEPRECATED", function (req, res) {
+//   // USER IMAGE UPLOADING ---------------------------------------
+//   var multer = require("multer");
+//   var storage = multer.diskStorage({
+//     destination: "./public/images/posts",
+//     filename: function (req, file, cb) {
+//       console.log("req.body 3:", req.body);
 
-  console.log("2-req.body:", req.body);
-  upload(req, res, function (err) {
-    console.log("currentPostImageName:", currentPostImageName);
-    console.log("req.body 3:", req.body);
+//       const postId = req.body.id; // was postId: should solve the undefined value in image file name....
+//       console.log("POST ID: sent to server: ", postId);
+//       currentPostImageName = postId + "-" + file.originalname;
+//       cb(null, postId + "-" + file.originalname);
+//     },
+//   });
+//   var upload = multer({ storage: storage }).array("file");
 
-    if (err instanceof multer.MulterError) {
-      return res.status(500).json(err);
-    } else if (err) {
-      return res.status(500).json(err);
-    }
+//   console.log("2-req.body:", req.body);
+//   upload(req, res, function (err) {
+//     console.log("currentPostImageName:", currentPostImageName);
+//     console.log("req.body 3:", req.body);
 
-    return res.status(200).send(currentPostImageName);
-  });
-});
+//     if (err instanceof multer.MulterError) {
+//       return res.status(500).json(err);
+//     } else if (err) {
+//       return res.status(500).json(err);
+//     }
+
+//     return res.status(200).send(currentPostImageName);
+//   });
+// });
 
 //------------------------------------------------------------
 
@@ -206,7 +209,7 @@ const upload = multer({
 }).array("upload", 1);
 */
 
-app.post("/api/uploadUserImage", function (req, res) {
+app.post("/uploadUserImage", function (req, res) {
   console.log("api image upload: spot 1");
   console.log("req.body:", req.body);
 
@@ -255,7 +258,7 @@ app.post("/api/uploadUserImage", function (req, res) {
 
 
 
-app.post("/api/uploadPostImage", function (req, res) {
+app.post("/uploadPostImage", function (req, res) {
   console.log("api image upload: spot 1");
   console.log("req.body:", req.body);
 
