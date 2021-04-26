@@ -250,42 +250,52 @@ app.post("/api/uploadUserImage", function (req, res) {
     //response.redirect("/success");
     return res.status(200).send(currentImageName);
   });
-
-  /*
-REFERENCE DIGITAL OCEAN SPACES: 
- https://www.digitalocean.com/community/tutorials/how-to-upload-a-file-to-object-storage-with-node-js 
-
- CREATE A SPACE: 
- https://www.digitalocean.com/community/tutorials/how-to-create-a-digitalocean-space-and-api-key
-
- https://servewerx-space-1.nyc3.digitaloceanspaces.com
-*/
-
-  // // USER IMAGE UPLOADING ---------------------------------------
-  // var multer = require("multer");
-  // var storage = multer.diskStorage({
-  //   destination: "./public/images",
-  //   filename: function (req, file, cb) {
-  //     console.log("req.body 3:", req.body);
-
-  //     const _id = req.body._id;
-  //     currentImageName = _id + "-" + file.originalname;
-  //     cb(null, _id + "-" + file.originalname);
-  //   },
-  // });
-  // var upload = multer({ storage: storage }).array("file");
-
-  // console.log("1-req.body:", req.body);
-  // upload(req, res, function (err) {
-  //   console.log("currentImageName:", currentImageName);
-  //   console.log("req.body 2:", req.body);
-
-  //   if (err instanceof multer.MulterError) {
-  //     return res.status(500).json(err);
-  //   } else if (err) {
-  //     return res.status(500).json(err);
-  //   }
-
-  //   return res.status(200).send(currentImageName);
-  // });
+ 
 });
+
+
+
+app.post("/api/uploadPostImage", function (req, res) {
+  console.log("api image upload: spot 1");
+  console.log("req.body:", req.body);
+
+  const aws = require("aws-sdk");
+  const multer = require("multer");
+  const multerS3 = require("multer-s3");
+  const spacesEndpoint = new aws.Endpoint("nyc3.digitaloceanspaces.com");
+  const s3 = new aws.S3({
+    endpoint: spacesEndpoint,
+    accessKeyId:'HAEFYFNNHKJKKG2JVKTX' ,
+    secretAccessKey:'PIw8/1AZiPosqVtTCMdzRTlKES2wLOt8jdWdDkGLjLA'
+  });
+  console.log("api image upload: spot 2");
+  // Change bucket property to your Space name
+  const upload = multer({
+    storage: multerS3({
+      s3: s3,
+      bucket: "servewerx-space-1",
+      acl: "public-read",
+      key: function (request, file, cb) {
+        console.log(file);
+        const postId = req.body.id;
+        currentPostImageName = postId + "-" + file.originalname;
+        cb(null, postId + "-" + file.originalname);
+      },
+    }),
+  }).array("file", 1); // "upload" from space example....name of html input element
+
+
+  upload(req, res, function (err) {
+
+    if (err) {
+      console.log(err);
+      //return response.redirect("/error");
+      return res.status(500).json(err);
+    }
+    console.log("File uploaded successfully.");
+    //response.redirect("/success");
+    return res.status(200).send(currentPostImageName);
+  });
+ 
+});
+ 
