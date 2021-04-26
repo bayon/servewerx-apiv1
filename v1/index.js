@@ -37,10 +37,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 //ROUTES:
-// app.use("/users/", authRoutes);
-// app.use("/posts/", postRoutes);
-app.use("/api/users/", authRoutes);
-app.use("/api/posts/", postRoutes);
+app.use("/users/", authRoutes);
+app.use("/posts/", postRoutes);
+// app.use("/api/users/", authRoutes);
+// app.use("/api/posts/", postRoutes);
 mongoose
   .connect(
     `mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASS}@cluster0.mputo.mongodb.net/${process.env.MONGO_DB_NAME}?retryWrites=true&w=majority`,
