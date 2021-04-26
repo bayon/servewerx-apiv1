@@ -26,7 +26,7 @@ require("dotenv").config({ path: ".env" });
 app.use(cors());
 //Stripe Dependencies:
 const stripe = require("stripe")(
-  "sk_test_51DxDsuKxNNqNmAYUC2HgNDaYbb3wgKg5yqr8MFcsygJVmxtPCDFkNyVUB2YMfQgO4rLublkoQ9la38gGx72BDKdH00s8eLiOjP"
+  "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"
 );
 const bodyParser = require("body-parser");
 
@@ -152,7 +152,7 @@ app.post("/pay", async (req, res) => {
   const { email } = req.body;
 
   const paymentIntent = await stripe.paymentIntents.create({
-    amount: 5000,
+    amount: 1,
     currency: "usd",
     // Verify your integration in this guide by including this parameter
     metadata: { integration_check: "accept_a_payment" },
