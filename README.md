@@ -17,3 +17,5 @@ http://www.servewerx.com/
 https://www.servewerx.com/
 digital ocean things going awry...not mine....may need to set A record for www 
 
+Uploading Images : 
+https://www.digitalocean.com/community/tutorials/how-to-upload-a-file-to-object-storage-with-node-js

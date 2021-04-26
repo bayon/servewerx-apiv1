@@ -52,7 +52,7 @@ router.post("/create", validatePost, async (req, res) => {
   const post = new Post({
     userId: req.body.userId,
     title: req.body.title,
-
+    activated:"1",
     description: req.body.description,
     category: req.body.category,
     postType: req.body.postType,
