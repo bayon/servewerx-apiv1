@@ -118,7 +118,15 @@ router.post("/user/posts", async (req, res) => {
 });
 
 router.get("/site/posts", async (req, res) => {
-  const post = await Post.find();
+
+// FIND all where dateCreated is greater than one month ago today. 
+  var d = new Date();
+  // Set it to one month ago
+  d.setMonth(d.getMonth() - 1);
+ let isoDateMonthAgo = d.toISOString();
+  //console.log('isoDateMonthAgo:',isoDateMonthAgo)
+
+  const post = await Post.find({dateCreated: {$gt:isoDateMonthAgo}});
   console.log("post:", post);
   res.send(post);
 });

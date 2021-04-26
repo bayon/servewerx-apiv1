@@ -79,3 +79,18 @@ take only one item from the matching filters
 var item = db.collection.findOne({'condition':'some condition'})
 and delete the item by using the id
 db.collection.remove({_id: item._id});
+
+
+
+
+DATE COMPARISON IN MONGODB : 
+this example comapring iso date string when record was created to a month ago....
+
+// FIND all where dateCreated is greater than one month ago today. 
+  var d = new Date();
+  // Set it to one month ago
+  d.setMonth(d.getMonth() - 1);
+ let isoDateMonthAgo = d.toISOString();
+  //console.log('isoDateMonthAgo:',isoDateMonthAgo)
+
+  const post = await Post.find({dateCreated: {$gt:isoDateMonthAgo}});
