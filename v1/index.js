@@ -13,7 +13,7 @@ const multer = require("multer");
 const multerS3 = require("multer-s3");
 
 app.use(express.static("./public"));
-app.use("/public/images", express.static(__dirname + "/public/images/"));
+//app.use("/public/images", express.static(__dirname + "/public/images/"));
 
 var currentImageName = null;
 var currentPostImageName = null;
@@ -216,6 +216,8 @@ app.post("/api/uploadUserImage", function (req, res) {
   const spacesEndpoint = new aws.Endpoint("nyc3.digitaloceanspaces.com");
   const s3 = new aws.S3({
     endpoint: spacesEndpoint,
+    accessKeyId:'HAEFYFNNHKJKKG2JVKTX' ,
+    secretAccessKey:'PIw8/1AZiPosqVtTCMdzRTlKES2wLOt8jdWdDkGLjLA'
   });
   console.log("api image upload: spot 2");
   // Change bucket property to your Space name
@@ -226,7 +228,10 @@ app.post("/api/uploadUserImage", function (req, res) {
       acl: "public-read",
       key: function (request, file, cb) {
         console.log(file);
-        cb(null, file.originalname);
+               const _id = req.body._id;
+       currentImageName = _id + "-" + file.originalname;
+       cb(null, _id + "-" + file.originalname);
+       // cb(null, file.originalname);
       },
     }),
   }).array("file", 1); // "upload" from space example....name of html input element
@@ -243,7 +248,7 @@ app.post("/api/uploadUserImage", function (req, res) {
     }
     console.log("File uploaded successfully.");
     //response.redirect("/success");
-    return res.status(200).send("currentImageName");
+    return res.status(200).send(currentImageName);
   });
 
   /*
