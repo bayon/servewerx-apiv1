@@ -328,13 +328,19 @@ var zipcodes = require('zipcodes-nearby');
 
 // find zipcodes within 10km from 95020 using the default datafile "zipcodes.csv"
 var meters = milesToMeters(miles)
- const nearby = await zipcodes.near(zipcode, meters);
-console.log('- - - - - - - - nearby:',nearby);
-
-
-  const posts = await Post.find( { zip: { $in: nearby } } );
-  console.log("proximity .....posts:", posts);
+try {
+  const nearby = await zipcodes.near(zipcode, meters);
+  //console.log('- - - - - - - - nearby:',nearby);
+  //TODO: verify POSTAL CODE exists.
+    const posts = await Post.find( { zip: { $in: nearby } } );
+    console.log("proximity .....posts:", posts);
+    res.send(posts);
+} catch (error) {
+  
+  const posts = await Post.find();
   res.send(posts);
+}
+
   
 
  
