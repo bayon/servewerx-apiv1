@@ -118,6 +118,8 @@ router.post("/user/posts", async (req, res) => {
 });
 
 router.get("/site/posts", async (req, res) => {
+ 
+
 
 // FIND all where dateCreated is greater than one month ago today. 
   var d = new Date();
@@ -309,11 +311,28 @@ router.post("/clearPost", async (req, res) => {
 
 router.post("/proximity", async (req, res) => {
   console.log("user posts: req.body:", req.body);
-  const arrayOfZips = req.body.arrayOfZips ;
- 
+  const data = req.body.data ;
+  console.log('proximity with data:',data);
+  var zipcode = data.zip;
+  var miles = parseInt(data.miles);
+  console.log('zipcode and miles:',zipcode,miles)
+  //data = [{zip:"zip"},{miles:"miles"}]
+  const metersToMiles = (i) => {
+    return i * 0.000621371192;
+  };
+  const milesToMeters = (i)  => {
+    return i*1609.344;
+}
+
+var zipcodes = require('zipcodes-nearby');
+
+// find zipcodes within 10km from 95020 using the default datafile "zipcodes.csv"
+var meters = milesToMeters(miles)
+ const nearby = await zipcodes.near(zipcode, meters);
+console.log('- - - - - - - - nearby:',nearby);
 
 
-  const posts = await Post.find( { zip: { $in: arrayOfZips } } );
+  const posts = await Post.find( { zip: { $in: nearby } } );
   console.log("proximity .....posts:", posts);
   res.send(posts);
   
