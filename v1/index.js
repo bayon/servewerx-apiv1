@@ -11,7 +11,15 @@ const verifyToken = require("./routes/verifyToken");
 const aws = require("aws-sdk");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
+//-------------------
+//const multer = require('multer')
+const sharp = require('sharp')
+const storage = require('./upload-config')
+const upload = multer(storage)
+const path = require('path')
+const fs = require('fs')
 
+//------------------
 app.use(express.static("./public"));
 //app.use("/public/images", express.static(__dirname + "/public/images/"));
 
@@ -258,7 +266,7 @@ app.post("/uploadUserImage", function (req, res) {
 
 
 
-app.post("/uploadPostImage", function (req, res) {
+app.post("/uploadPostImageOLD", function (req, res) {
   console.log("api image upload: spot 1");
   console.log("req.body:", req.body);
 
@@ -301,4 +309,71 @@ app.post("/uploadPostImage", function (req, res) {
   });
  
 });
- 
+ //--------------
+
+ //const aws = require("aws-sdk");
+ //const multer = require("multer");
+ //const multerS3 = require("multer-s3");
+ const spacesEndpoint = new aws.Endpoint("nyc3.digitaloceanspaces.com");
+ const s3 = new aws.S3({
+   endpoint: spacesEndpoint,
+   accessKeyId:'HAEFYFNNHKJKKG2JVKTX' ,
+   secretAccessKey:'PIw8/1AZiPosqVtTCMdzRTlKES2wLOt8jdWdDkGLjLA'
+ });
+ console.log("api image upload: spot 2");
+ // Change bucket property to your Space name
+ const uploadSharp = multer({
+   storage: multerS3({
+     s3: s3,
+     bucket: "servewerx-space-1",
+     acl: "public-read",
+     key: function (request, file, cb) {
+       console.log(file);
+       const postId = req.body.id;
+       currentPostImageName = postId + "-" + file.originalname;
+       cb(null, postId + "-" + file.originalname);
+     },
+   }),
+ }).array("file", 1); // "upload" from space example....name of html input element
+
+
+
+
+
+app.post('/uploadPostImage',upload.single('file') ,async (req, res) => {
+  const { filename: image } = req.file 
+
+  await sharp(req.file.path)
+   .resize(500)
+   .jpeg({quality: 50})
+   .toFile(
+       path.resolve(req.file.destination,'resized',image)
+   )
+
+   uploadSharp(req, res, function (err) {
+
+    if (err) {
+      console.log(err);
+      //return response.redirect("/error");
+      return res.status(500).json(err);
+    }
+    console.log("File uploaded successfully.");
+    //response.redirect("/success");
+    fs.unlinkSync(req.file.path)
+    return res.status(200).send(currentPostImageName);
+  });
+
+
+  // fs.unlinkSync(req.file.path)
+
+   //return res.send('SUCCESS!')
+})
+
+/*
+sharp(input)
+  .resize({ width: 100 })
+  .toBuffer()
+  .then(data => {
+    // 100 pixels wide, auto-scaled height
+  });
+*/
