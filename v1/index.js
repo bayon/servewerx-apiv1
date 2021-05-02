@@ -286,7 +286,7 @@ app.post("/uploadPostImage", function (req, res) {
       s3: s3,
       bucket: "servewerx-space-1",
       acl: "public-read",
-      key: function (request, file, cb) {
+      key: function (req, file, cb) {
         console.log(file);
         const postId = req.body.id;
         currentPostImageName = postId + "-" + file.originalname;
