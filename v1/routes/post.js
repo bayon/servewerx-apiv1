@@ -391,3 +391,18 @@ try {
 //================================================
 
 module.exports = router;
+
+
+
+/*
+
+can I modify an image that is already stored on DO spaces ? 
+with sharp: 
+sharp(input)
+  .resize({ height: 100 })
+  .toBuffer()
+  .then(data => {
+    // 100 pixels high, auto-scaled width
+  });
+  ??? 
+*/
