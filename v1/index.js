@@ -328,7 +328,7 @@ app.post("/uploadPostImage", function (req, res) {
      s3: s3,
      bucket: "servewerx-space-1",
      acl: "public-read",
-     key: function (request, file, cb) {
+     key: function (req, file, cb) {
        console.log(file);
        const postId = req.body.id;
        currentPostImageName = postId + "-" + file.originalname;
@@ -345,8 +345,8 @@ app.post('/uploadPostImageExperiment',upload.single('file') ,async (req, res) =>
   const { filename: image } = req.file 
 
   await sharp(req.file.path)
-   .resize(500)
-   .jpeg({quality: 50})
+   .resize(200)
+   .jpeg({quality: 75})
    .toFile(
        path.resolve(req.file.destination,'resized',image)
    )
