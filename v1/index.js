@@ -39,11 +39,12 @@ const stripe = require("stripe")(
 const bodyParser = require("body-parser");
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(bodyParser.urlencoded({ extended: true }));
 
 // parse application/json
-app.use(bodyParser.json());
-
+//app.use(bodyParser.json());
+app.use(bodyParser.json({limit:'10mb'})); 
+app.use(bodyParser.urlencoded({extended:true, limit:'10mb'}));
 
 // NOTE: every endpoint in this index.js file has a 'prefix' of 'api' already set.
 //ROUTES:
