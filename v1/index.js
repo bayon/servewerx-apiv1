@@ -266,7 +266,7 @@ app.post("/uploadUserImage", function (req, res) {
 
 
 
-app.post("/uploadPostImageOLD", function (req, res) {
+app.post("/uploadPostImage", function (req, res) {
   console.log("api image upload: spot 1");
   console.log("req.body:", req.body);
 
@@ -340,7 +340,7 @@ app.post("/uploadPostImageOLD", function (req, res) {
 
 
 
-app.post('/uploadPostImage',upload.single('file') ,async (req, res) => {
+app.post('/uploadPostImageExperiment',upload.single('file') ,async (req, res) => {
   const { filename: image } = req.file 
 
   await sharp(req.file.path)
